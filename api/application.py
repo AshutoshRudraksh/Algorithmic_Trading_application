@@ -28,7 +28,7 @@ class Drink(db.Model):
 @app.route('/')
 def index():
 	print('Index route access successful!')
-    return 'Hello!'
+	return 'Hello!'
 
 @app.route('/drinks', methods=['GET'])
 def list_drinks():
@@ -55,6 +55,15 @@ def add_drink():
     db.session.add(new_drink)
     db.session.commit()
     return jsonify({'message': 'Drink added successfully!'}), 201
+
+@app.route('/drinks/<int:id>', methods=['DELETE'])
+def delete_drink(id):
+	drink = Drink.query.get_or_404(id)
+	if drink is None:
+		return {"error": "not found"}
+	db.session.delete(drink)
+	db.session.commit()
+	return {"message": "Deleted!@"}
 
 if __name__ == '__main__':
     app.run(debug=True)
